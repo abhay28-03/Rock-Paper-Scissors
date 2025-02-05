@@ -1,5 +1,15 @@
-let userscore = 0;
-let compscore = 0;
+const score = JSON.parse(localStorage.getItem('score')) || { wins: 0, losses: 0 };
+
+function renderScore() {
+    document.querySelector('.user').innerHTML = `User: ${score.wins}, Computer: ${score.losses}`;
+}
+
+function saveToStorage() {
+    localStorage.setItem('score', JSON.stringify(score));
+}
+
+renderScore();
+
 const options = document.querySelectorAll(".option");
 
 const msg = document.querySelector("#msg");
@@ -9,7 +19,7 @@ options.forEach((option) => {
     option.addEventListener("click", () => {
         const choiceOfUser = option.getAttribute("id");
         console.log("option was chosen", choiceOfUser);
-        khelkhelo(choiceOfUser)
+        khelkhelo(choiceOfUser);
     })
 })
 
@@ -17,9 +27,15 @@ const showVijeta = (userWin, choiceOfUser, compChoice) => {
     if(userWin) {
         console.log("User wins.");
         msg.innerHTML = `User wins.User's ${choiceOfUser} beats ${compChoice}`;
+        score.wins++;
+        renderScore();
+        saveToStorage();
     } else {
         console.log("User loses.");
         msg.innerHTML = `User loses.${compChoice} beats ${choiceOfUser}`;
+        score.losses++;
+        renderScore();
+        saveToStorage();
     }
 }
 
@@ -42,7 +58,7 @@ const khelkhelo = (choiceOfUser) => {
         }else {
             userWin = compChoice === "rock"? false: true; //rock,paper
         }
-        showVijeta(userWin);
+        showVijeta(userWin, choiceOfUser, compChoice);
     }
 }
 
